@@ -2,8 +2,8 @@ module.exports = (app) => {
 
     const cheerio = require('cheerio')
     const request = require('request')
-    const cors = require('cors');  
-
+    const cors = require('cors'); 
+    const config = require('../../config/config');
     
     app.get('/', cors(), (req, resp)=>{
         pegaDados()
@@ -18,9 +18,9 @@ module.exports = (app) => {
         return new Promise((resolve, reject)=>{
             request({
                 method: 'GET',
-                url: 'https://www.cercos.com.br/sis/bandeiras_tarifarias/'
+                url: config.sourceUrl
             }, (err, res, body) => {            
-                if (err) return reject('inacessivel');        
+                if (err) return reject('inacessivel');                   
 
                 let $ = cheerio.load(body)
                       
@@ -37,14 +37,11 @@ module.exports = (app) => {
                         fator: fator
                     })                   
                 }         
-                console.log(dados);
+
                 return resolve(dados);
             })
 
         });
-
-
-
-        
+                
     }
 }
